@@ -1,0 +1,64 @@
+#svl
+//	function.svl		function description
+//
+//
+//	21-jan-2009 (sg) added instructions
+//
+//
+/*
+DESCRIPTION:
+Extracts the name of a molecule from the molecule field and writes it
+to a new field.
+
+USAGE:
+
+1.  Save and load this function e.g. use the MOE | File | Open panel
+2.  At the SVL command line prompt type the following
+
+svl>  db_ExtractMoleculeName [mdb, namefield]
+
+where,
+
+mdb is a token containing the filename of the mdb database to operate on
+namefield is a token containing the destination field for the names
+*/
+//
+//
+//
+// COPYRIGHT (C) 2008 CHEMICAL COMPUTING GROUP INC.  ALL RIGHTS RESERVED.
+//
+// PERMISSION TO USE, COPY, MODIFY AND DISTRIBUTE THIS SOFTWARE IS HEREBY
+// GRANTED PROVIDED THAT: (1) UNMODIFIED OR FUNCTIONALLY EQUIVALENT CODE
+// DERIVED FROM THIS SOFTWARE MUST CONTAIN THIS NOTICE; (2) ALL CODE DERIVED
+// FROM THIS SOFTWARE MUST ACKNOWLEDGE THE AUTHOR(S) AND INSTITUTION(S); (3)
+// THE NAMES OF THE AUTHOR(S) AND INSTITUTION(S) NOT BE USED IN ADVERTISING
+// OR PUBLICITY PERTAINING TO THE DISTRIBUTION OF THE SOFTWARE WITHOUT
+// SPECIFIC, WRITTEN PRIOR PERMISSION; (4) ALL CODE DERIVED FROM THIS SOFTWARE
+// BE EXECUTED WITH THE MOLECULAR OPERATING ENVIRONMENT (MOE) LICENSED FROM
+// CHEMICAL COMPUTING GROUP INC.
+//
+// CHEMICAL COMPUTING GROUP INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+// SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
+// AND IN NO EVENT SHALL CHEMICAL COMPUTING GROUP INC. BE LIABLE FOR ANY
+// SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+// CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+// CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+
+function db_ReorderFields;
+
+global function db_ExtractMoleculeName [mdb, namefield]
+    local dbkey, ent, molfield, name;
+    dbkey = db_Open[mdb,'read-write'];
+    db_EnsureField[dbkey,namefield,'char'];
+    molfield = db_FirstFieldType[dbkey,'molecule'];
+    ent = 0;
+    while ent = db_NextEntry[dbkey,ent] loop
+	name = first db_ReadFields[dbkey,ent,molfield];
+	name = cat name(MOL_NAME);
+	db_Write[dbkey,ent,tag[namefield, nest string name]];
+    endloop
+    db_ReorderFields[dbkey,'name',1];
+    db_Close dbkey;
+endfunction

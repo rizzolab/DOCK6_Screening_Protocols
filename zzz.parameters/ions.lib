@@ -1,0 +1,223 @@
+!!index array str
+ "CAL"
+ "MAG"
+ "ZIN"
+ "CHL"
+ "SOD"
+ "POT"
+!entry.CAL.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "CAL" "C0" 0 1 131072 1 20 2.000000
+!entry.CAL.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "CAL" "C0" 0 -1 0.0
+!entry.CAL.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.CAL.unit.childsequence single int
+ 2
+!entry.CAL.unit.connect array int
+ 0
+ 0
+!entry.CAL.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.CAL.unit.name single str
+ "CAL"
+!entry.CAL.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.CAL.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.CAL.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "CAL" 1 2 1 "?" 0
+!entry.CAL.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.CAL.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.CAL.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.MAG.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "MAG" "MG" 0 1 131072 1 12 2.000000
+!entry.MAG.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "MAG" "MG" 0 -1 0.0
+!entry.MAG.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.MAG.unit.childsequence single int
+ 2
+!entry.MAG.unit.connect array int
+ 0
+ 0
+!entry.MAG.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.MAG.unit.name single str
+ "MAG"
+!entry.MAG.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.MAG.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.MAG.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "MAG" 1 2 1 "?" 0
+!entry.MAG.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.MAG.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.MAG.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.ZIN.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "ZIN" "Zn" 0 1 131072 1 30 2.000000
+!entry.ZIN.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "ZIN" "Zn" 0 -1 0.0
+!entry.ZIN.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.ZIN.unit.childsequence single int
+ 2
+!entry.ZIN.unit.connect array int
+ 0
+ 0
+!entry.ZIN.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.ZIN.unit.name single str
+ "ZIN"
+!entry.ZIN.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.ZIN.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.ZIN.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "ZIN" 1 2 1 "?" 0
+!entry.ZIN.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.ZIN.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.ZIN.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.CHL.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "CHL" "IM" 0 1 131072 1 17 -1.000000
+!entry.CHL.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "CHL" "IM" 0 -1 0.0
+!entry.CHL.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.CHL.unit.childsequence single int
+ 2
+!entry.CHL.unit.connect array int
+ 0
+ 0
+!entry.CHL.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.CHL.unit.name single str
+ "CHL"
+!entry.CHL.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.CHL.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.CHL.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "CHL" 1 2 1 "?" 0
+!entry.CHL.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.CHL.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.CHL.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.SOD.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "SOD" "Na" 0 1 131072 1 11  1.000000
+!entry.SOD.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "SOD" "Na" 0 -1 0.0
+!entry.SOD.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.SOD.unit.childsequence single int
+ 2
+!entry.SOD.unit.connect array int
+ 0
+ 0
+!entry.SOD.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.SOD.unit.name single str
+ "SOD"
+!entry.SOD.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.SOD.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.SOD.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "SOD" 1 2 1 "?" 0
+!entry.SOD.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.SOD.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.SOD.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.POT.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "POT" "K" 0 1 131072 1 19  1.000000
+!entry.POT.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "POT" "K" 0 -1 0.0
+!entry.POT.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.POT.unit.childsequence single int
+ 2
+!entry.POT.unit.connect array int
+ 0
+ 0
+!entry.POT.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+!entry.POT.unit.name single str
+ "POT"
+!entry.POT.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+!entry.POT.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.POT.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "POT" 1 2 1 "?" 0
+!entry.POT.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.POT.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.POT.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0

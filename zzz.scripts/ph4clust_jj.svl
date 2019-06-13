@@ -1,0 +1,313 @@
+#svl
+//	ph4clust.svl		fingerprint clustering
+//
+//	19-jan-2007 (sb) support esel:1 as per mansrc when DBV is closed
+//	07-aug-2005 (ms) cluster membership now independent of db order
+//	14-mar-2005 (jd) redundant call to ValidateFingerprint in ClusterMDB
+//	13-aug-1999 (pm) fixed $CLUSTER hard coded into code bug.
+//	08-apr-1999 (pm) bbhelp typos, set child task to come down with parent
+//	08-jan-1999 (pl) taken from divsub.svl
+//
+// COPYRIGHT (C) 1997-2007 CHEMICAL COMPUTING GROUP INC.  ALL RIGHTS RESERVED.
+//
+// PERMISSION TO USE, COPY, MODIFY AND DISTRIBUTE THIS SOFTWARE IS HEREBY
+// GRANTED PROVIDED THAT: (1) UNMODIFIED OR FUNCTIONALLY EQUIVALENT CODE
+// DERIVED FROM THIS SOFTWARE MUST CONTAIN THIS NOTICE; (2) ALL CODE DERIVED
+// FROM THIS SOFTWARE MUST ACKNOWLEDGE THE AUTHOR(S) AND INSTITUTION(S); (3)
+// THE NAMES OF THE AUTHOR(S) AND INSTITUTION(S) NOT BE USED IN ADVERTISING
+// OR PUBLICITY PERTAINING TO THE DISTRIBUTION OF THE SOFTWARE WITHOUT
+// SPECIFIC, WRITTEN PRIOR PERMISSION; (4) ALL CODE DERIVED FROM THIS SOFTWARE
+// BE EXECUTED WITH THE MOLECULAR OPERATING ENVIRONMENT (MOE) LICENSED FROM
+// CHEMICAL COMPUTING GROUP INC.
+//
+// CHEMICAL COMPUTING GROUP INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+// SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
+// AND IN NO EVENT SHALL CHEMICAL COMPUTING GROUP INC. BE LIABLE FOR ANY
+// SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+// CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+// CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+#set title	'Fingerprint Clustering'
+#set class	'MOE:fingerprint'
+#set version	'2005.08'
+#set main	'dbv_FingerprintCluster'
+
+function ph4_ValidateFingerprint;
+function ph4_FingerprintChooser;
+function ph4_FingerprintMDB;
+function ph4_SimilarityMDB;
+
+const PH4_DIV_DEFAULTS = [
+    overlap:	0.85,			// % neighbor overlap threshold
+    sim:	0.85,			// % similarity overlap threshold
+    cfield:	'$CLUSTER',		// cluster fieldname
+    esel:	0,			// selected entries only
+    mfield:	'',			// molecule field for clustering
+    matfile:	''			// matrix filename
+];
+
+// ph4_ClusterMDB assigns cluster codes to a database using fingerprint
+// similarity and Jarvis Patrick clustering.
+
+local function fread_ivec [fnum, pos]
+    fseek [fnum, pos];
+    local n = freadb [fnum, 'int4m', 1];
+    return freadb [fnum, 'int4m', n];
+endfunction
+
+local function fwrite_ivec [fnum, v]
+    local pos = ftell fnum;
+    fwriteb [fnum, 'int4m', length v];
+    fwriteb [fnum, 'int4m', v];
+    return pos;
+endfunction
+
+global function ph4_ClusterMDB_bestfit [filename,fp_code,fp_sim,options]
+    local i, j;
+    local msg = 0;
+
+	// If there are no options, prompt for them. Then add in the
+	// defaults, strip the duplicates and print the command
+	// needed to start us up again.
+
+    options = tagcat [options, PH4_DIV_DEFAULTS];
+    options = options[pack indexof [tags PH4_DIV_DEFAULTS, tags options]];	// !!! needed?
+
+    if not MOE_BATCH then
+	msg = Message [msg, 'ph4_ClusterMDB...'];
+    endif
+
+    write ['ph4_ClusterMDB [\'{}\',{},{},', filename, fp_code, fp_sim ];
+    print options;
+    write ']\n';
+    write ['{}\n', token asctime[]];
+
+	// Open up the database file and determine the molecule field.  Then,
+	// make sure that the cluster code field exists.  If there is no
+	// molecule field with the selected fingerprint then calculate it.
+
+    local src_mdb = db_Open filename;
+    local src_n = db_nEntries src_mdb;
+    local src_mfield = options.mfield;
+
+    if src_mfield == '' then
+	src_mfield = db_FirstFieldType [src_mdb, 'molecule'];
+    endif
+
+    if options.cfield <> '' then
+	db_SetEnv [src_mdb, options.cfield, ''];
+	db_EnsureField [src_mdb, options.cfield, 'int'];
+    endif
+
+    if not indexof [fp_code, first db_Fields src_mdb] then
+	Close [force:MOE_BATCH];
+	write 'fingerprints not in database...\n';
+	ph4_FingerprintMDB [src_mdb, src_mfield, fp_code, options.esel];
+    endif
+
+	// If we are requested to write out the similarity matrix file
+	// then we create the output file now...
+
+    local fmat = 0;
+
+    if not (options.matfile === [] or options.matfile === '') then
+	fmat = fopenw options.matfile;
+    endif
+
+	// Make the temporary files and open them if we are doing a subset.
+
+    local ftmp = 0;
+    local ftmp_name = token swrite ['ph4{}.tmp', rand 100000];
+    local ftmp_pos = 0;
+
+    write ['using temporary feature file {}\n', ftmp_name];
+    ftmp = fopenw ftmp_name;
+
+	// For each molecule in the active set (all entries or
+	// selected entries) calculate its similarity to all others.
+
+    write ['clustering {} [{} entries]...\n', db_Filename src_mdb, src_n];
+
+    local entlist = db_Entries src_mdb;
+    
+    if options.esel and dbv_Key src_mdb then	// selection iff dbv_Open
+	entlist = entlist | dbv_EntrySelection src_mdb;
+    endif
+
+    local cnum = zero entlist;
+    local entlist_tmp = entlist;    //a copy of entries
+    local simkeys;
+    local tmp;
+    local testing = one entlist;
+
+	// Those entries (including the first entry) have similar fp to the first 
+        // entry's are stored in simikeys and form a cluster. They are deleted 
+	// from entlist_tmp. entlist_tmp undergos iteration until it has
+	// no element. 
+    while length entlist_tmp > 0 loop
+	local fp = first db_ReadFields [src_mdb, entlist_tmp(1), fp_code];
+	local sim = ph4_SimilarityMDB [src_mdb, entlist_tmp, fp_code, fp_sim, fp];
+	cnum(indexof[entlist_tmp(1),entlist]) = indexof[entlist_tmp(1),entlist];
+        local ref = indexof[entlist_tmp(1),entlist];
+	entlist_tmp = drop[entlist_tmp,1]; //delete first entry to avoid endless
+	sim = drop[sim,1];
+
+	// write ['test3 {}\n', entlist_tmp];
+        simkeys = entlist_tmp | sim >= options.sim;
+        entlist_tmp = entlist_tmp | sim < options.sim; // can be improved
+	tmp = indexof[simkeys,entlist];
+
+	for j = 1, length simkeys loop
+	    cnum(tmp(j)) = ref; // a molecule has cnum = 4 belong to the cluster
+	// headed by the fourth molecule in the database.
+
+ 	endloop
+    endloop
+	
+    for i = 1, length entlist loop
+	db_Write [src_mdb, entlist(i), tag [options.cfield, cnum(i)]];
+    endloop
+	// Close all of our files and get out...
+
+    write ['{}\n', token asctime[]];
+    write ['ph4_ClusterMDB_bestfit: done {}\n', db_Filename src_mdb];
+    db_Close src_mdb;
+    if ftmp <> 0 then fclose ftmp; fdelete ftmp_name; endif
+    if not MOE_BATCH then Message [msg, []]; endif
+endfunction
+
+// ---------------------------- interface ------------------------------------
+
+// dbv_FingerprintCluster displays a panel and calls ph4_ClusterMDB to effect
+// clustering of a database.
+
+global function dbv_FingerprintCluster filename
+    if MOE_BATCH then return; endif
+
+	// Determine which database we'll use.
+
+    if filename === [] or filename === '' then
+	filename = db_Filename db_View[];
+    endif
+
+    local mdb_filename = db_Filename filename;
+    local [fname, ftype] = db_Fields mdb_filename;
+
+	// Create the window.
+
+    local wkey = WindowCreate [
+	title: 'Fingerprint Cluster', name: 'panel',
+	options: ['OK','Set Fingerprint...','Cancel'],
+	onTrigger: ['return','return','exit'],
+
+	Text : [
+	    name: 'file', title: 'Database:',
+	    len: 40, extendH: 1, sensitive:0,
+	    bubbleHelp: 'The database to operate upon.'
+	],
+
+	Checkbox : [
+	    name: 'esel', text: 'Selected Entries Only',
+	    bubbleHelp:
+		'If checked then only selected entries in the database\n'
+		'viewer will be used in the calculation.'
+	],
+
+	Option : [
+	    name: 'mfield', title: 'Molecule:',
+	    text: fname | ftype == 'molecule',
+	    bubbleHelp:
+		'The database field containing the molecules.  This is\n'
+		'required if fingerprints have not already been calculated.'
+	],
+
+	Label : [
+	    title: 'Fingerprint:', name: 'fptext', text: ' \n '
+	],
+
+	Text : [
+	    name: 'matfile', title: 'Matrix File:', len: 10, extendH: 1,
+	    bubbleHelp:
+		'The similarity matrix will be written to the\n'
+		'given file.  This is a matrix of similarities between\n'
+		'every pair of fingerprints.  If this field is empty\n'
+		'then the matrix will not be written.'
+	],
+
+	Scale : [
+	    name: 'sim', title: 'Similarity:', range: [0,100,1], extendH: 1,
+	    bubbleHelp:
+		'The percentage similarity that is used to determine\n'
+		'whether two molecules are similar.  This is used in\n'
+		'the comparison of fingerprints.'
+	],
+
+	Scale : [
+	    name: 'overlap', title: 'Overlap:', range: [0,100,1], extendH: 1,
+	    bubbleHelp:
+		'The percentage overlap that is used to determine\n'
+		'whether two molecules belong in the same cluster.\n'
+		'This is used to compare neighbor lists of molecules.'
+	],
+
+	Text : [
+	    name: 'cfield', title: 'Cluster Field:', len: 10,
+	    bubbleHelp:
+		'Cluster numbers will be written into the given field.\n'
+		'If this field is empty then cluster numbers will not\n'
+		'be written to the database.'
+	]
+    ];
+
+    WindowSetData [wkey, PH4_DIV_DEFAULTS];
+
+    WindowSetData [wkey, [
+	file:	mdb_filename,
+	sim:	PH4_DIV_DEFAULTS.sim * 100,
+	overlap:PH4_DIV_DEFAULTS.overlap * 100
+    ]];
+
+    static code, simcode, code_desc, sim_desc;
+    [code, simcode, code_desc, sim_desc] = ph4_FingerprintChooser[];
+
+    function set_fingerprint []
+	local t = token swrite ['{} ({})\nMetric: {} ({})',
+	    code_desc, code,
+	    sim_desc, simcode
+	];
+	WindowSetAttr [wkey, [fptext: [text: t] ]];
+    endfunction
+
+    local v, trig;
+    set_fingerprint[];
+    WindowShow wkey;
+
+    loop
+	[v,trig] = WindowWait wkey;
+	if trig === 'panel' then
+	    if v.(trig) == 'OK' then
+		break;
+	    elseif v.(trig) == 'Set Fingerprint...' then
+		const TARG = [master:'parent', statics:'share'];
+		if second task_fork TARG == 'child' then
+		    [code, simcode, code_desc, sim_desc] =
+			ph4_FingerprintChooser ['Cluster', code, simcode]
+		    ;
+		    set_fingerprint[];
+		    exit[];
+		endif
+	    elseif v.(trig) == 'Cancel' then
+		exit[];
+	    endif
+	endif
+    endloop
+
+    WindowDestroy wkey;
+
+    local opt = v | indexof [tags v, tags PH4_DIV_DEFAULTS];
+    opt.sim = opt.sim / 100;
+    opt.overlap = opt.overlap / 100;
+    ph4_ClusterMDB_bestfit [mdb_filename, code, simcode, opt];
+endfunction
+

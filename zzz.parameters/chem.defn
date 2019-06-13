@@ -1,0 +1,32 @@
+______________________________________________________________________
+name		null
+definition	*
+______________________________________________________________________
+name		hydrophobic
+
+definition	C. [ O. ] [ N. [ 2 O.2 ] [ 2 C. ] ] ( * )
+definition	N.pl3 ( 3 C. )
+definition	Cl ( C. )
+definition	Br ( C. )
+definition	I ( C. )
+definition	C.3 [ * ]
+______________________________________________________________________
+name		donor
+
+definition	N. ( H )
+definition	N.4 [ * ]
+______________________________________________________________________
+name		acceptor
+
+definition	O. [ H ] [ N. ] ( * )
+definition	O.3 ( 1 * ) [ N. ]
+definition	O.co2 ( C.2 ( O.co2 ) )
+definition	N. [ H ] [ N. ] [ O. ] [ 3 . ] ( * )
+definition	O.2 [ * ]
+______________________________________________________________________
+name		polar	
+
+definition	O.3 ( H )
+definition	F [ * ]
+______________________________________________________________________
+

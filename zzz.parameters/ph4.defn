@@ -1,0 +1,63 @@
+______________________________________________________________________
+name		null
+definition	*
+______________________________________________________________________
+name		hydrophobic
+
+definition	C. [ O. ] [ N. ] [ S. ] [ F ] [ P ] ( * )
+definition      C. ( N.pl3 ( 2 C. ) ) ( * )
+definition	N.pl3 ( 3 C. )
+______________________________________________________________________
+name		donor
+
+definition      H ( O. )
+definition      H ( N. )
+definition      H ( S. )
+definition      H ( F )
+______________________________________________________________________
+name		acceptor
+
+definition	O. ( * )
+definition      N.1 ( 1 * )
+definition      N.2 [ 3 * ]
+definition      N.3 ( 3 * )
+definition      N.pl3 ( 2 * ) [ H ]
+definition      S.2 [ O. ] [ N. ]
+definition      S.3 ( 2 * )
+definition      F  ( * ) 
+definition      Cl ( * )
+______________________________________________________________________
+name            aromatic
+
+
+definition      C.ar
+definition      N.ar
+______________________________________________________________________
+name            aroAcc
+
+definition      N.ar [ H ] [ 3 * ] ( * )
+______________________________________________________________________
+name            negative
+
+definition      C. ( 2 O.co2 )
+definition      C.2 ( O.2 ) ( O.3 [ * ] )
+definition      P. ( 4 O. ) ( O.3 [ * ] )
+definition      S. ( 3 O. ) ( O.3 [ * ] )
+definition      S. ( 4 O. ) ( O.3 [ * ] )
+definition      F [ * ]
+definition      Cl [ * ]
+______________________________________________________________________
+name            positive
+
+definition      C.cat ( * )
+definition      N.4 ( * )
+definition      N.3 ( 4 * )
+definition      N.2 ( 3 * )
+definition      Zn [ * ]
+definition      Mg [ * ]
+definition      Ca [ * ]
+definition      Mn [ * ]
+definition      K  [ * ]
+definition      Fe [ * ]
+______________________________________________________________________
+

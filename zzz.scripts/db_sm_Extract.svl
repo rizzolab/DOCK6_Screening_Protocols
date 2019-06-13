@@ -1,0 +1,37 @@
+#svl
+//	function.svl		function description
+//
+//
+//
+//
+/*
+DESCRIPTION:
+Extracts the SMILES string of a molecule from the molecule field and writes it
+to a new field.
+
+USAGE:
+
+svl>  db_sm_Extract ['database.mdb','SMILES']
+*/
+//
+//
+//
+
+function db_ReorderFields;
+
+global function db_sm_Extract [mdb, smiles_field]
+    local dbkey, ent, molfield, S_string;
+    dbkey = db_Open[mdb,'read-write'];
+    db_EnsureField[dbkey,smiles_field,'char'];
+    molfield = db_FirstFieldType[dbkey,'molecule'];
+    ent = 0;
+    while ent = db_NextEntry[dbkey,ent] loop
+	local mol = cat db_ReadFields[dbkey,ent, molfield];
+        local [chain, name] = mol_Create mol;
+        S_string = sm_Extract[cat cAtoms chain, aPrioCIP cat cAtoms chain];
+ 	local field = [smiles_field, string S_string];
+	ent = db_Write[dbkey,ent,nest field];
+        oDestroy chain;
+    endloop
+    db_Close dbkey;
+endfunction

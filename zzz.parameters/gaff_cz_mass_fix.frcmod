@@ -1,0 +1,17 @@
+remark Since the mass for the cz atom type does not seem to work, this is fixed manually
+MASS
+cz 12.01
+
+BOND
+
+ANGLE
+
+DIHE
+
+IMPROPER
+
+NONBON
+  cz          1.9080  0.0860             same as c2 
+
+
+
