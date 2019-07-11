@@ -205,6 +205,9 @@ source oldff/leaprc.ff14SB
 source leaprc.gaff
 loadoff ions.lib
 loadamberparams ions.frcmod
+loadamberparams frcmod.ions234lm_126_tip3p
+loadamberparams frcmod.ions1lm_126_tip3p
+loadamberparams frcmod.tip3p
 loadamberparams heme.frcmod
 loadamberprep heme.prep
 loadoff y2p.off
