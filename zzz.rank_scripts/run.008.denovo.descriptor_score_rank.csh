@@ -109,7 +109,7 @@ descriptor_cont_score_dielectric                             4.0
 descriptor_cont_score_vdw_scale                              1
 descriptor_cont_score_es_scale                               1
 descriptor_fps_score_use_footprint_reference_mol2            yes
-descriptor_fps_score_footprint_reference_mol2_filename       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_fps_score_footprint_reference_mol2_filename       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_fps_score_foot_compare_type                       Euclidean
 descriptor_fps_score_normalize_foot                          no
 descriptor_fps_score_foot_comp_all_residue                   yes
@@ -123,7 +123,7 @@ descriptor_fps_score_vdw_fp_scale                            1
 descriptor_fps_score_es_fp_scale                             1
 descriptor_fps_score_hb_fp_scale                             0
 descriptor_fms_score_use_ref_mol2                            yes
-descriptor_fms_score_ref_mol2_filename                       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_fms_score_ref_mol2_filename                       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_fms_score_write_reference_pharmacophore_mol2      no
 descriptor_fms_score_write_reference_pharmacophore_txt       no
 descriptor_fms_score_write_candidate_pharmacophore           no
@@ -134,11 +134,11 @@ descriptor_fms_score_match_rate_weight                       5.0
 descriptor_fms_score_match_dist_cutoff                       1.0
 descriptor_fms_score_match_proj_cutoff                       0.7071
 descriptor_fms_score_max_score                               20
-descriptor_fingerprint_ref_filename                          ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
-descriptor_hms_score_ref_filename                            ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_fingerprint_ref_filename                          ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
+descriptor_hms_score_ref_filename                            ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_hms_score_matching_coeff                          -5
 descriptor_hms_score_rmsd_coeff                              1
-descriptor_volume_score_reference_mol2_filename              ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_volume_score_reference_mol2_filename              ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_volume_score_overlap_compute_method               analytical
 descriptor_weight_cont_score                                 1
 descriptor_weight_fps_score                                  1

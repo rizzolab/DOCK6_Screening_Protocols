@@ -108,7 +108,7 @@ descriptor_cont_score_dielectric                             4.0
 descriptor_cont_score_vdw_scale                              1
 descriptor_cont_score_es_scale                               1
 descriptor_fps_score_use_footprint_reference_mol2            yes
-descriptor_fps_score_footprint_reference_mol2_filename       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_fps_score_footprint_reference_mol2_filename       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_fps_score_foot_compare_type                       Euclidean
 descriptor_fps_score_normalize_foot                          no
 descriptor_fps_score_foot_comp_all_residue                   yes

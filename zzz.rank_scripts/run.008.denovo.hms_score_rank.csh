@@ -104,7 +104,7 @@ descriptor_use_pharmacophore_score                           no
 descriptor_use_tanimoto                                      no
 descriptor_use_hungarian                                     yes
 descriptor_use_volume_overlap                                no
-descriptor_hms_score_ref_filename                            ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_hms_score_ref_filename                            ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_hms_score_matching_coeff                          -5
 descriptor_hms_score_rmsd_coeff                              1
 descriptor_weight_hms_score                                  1

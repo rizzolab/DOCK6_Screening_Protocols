@@ -99,7 +99,7 @@ descriptor_use_pharmacophore_score                           no
 descriptor_use_tanimoto                                      no
 descriptor_use_hungarian                                     no
 descriptor_use_volume_overlap                                yes
-descriptor_volume_score_reference_mol2_filename              ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_volume_score_reference_mol2_filename              ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_volume_score_overlap_compute_method               analytical
 descriptor_weight_volume_overlap_score                       -1
 gbsa_zou_score_secondary                                     no

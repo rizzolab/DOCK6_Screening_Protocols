@@ -82,13 +82,13 @@ conformer_search_type                                        rigid
 use_internal_energy                                          yes
 internal_energy_rep_exp                                      12
 internal_energy_cutoff                                       100
-ligand_atom_file                                             ${rootdir}/${system}/001.lig-prep/${system}.lig.am1bcc.mol2
+ligand_atom_file                                             ${rootdir}/${system}/001.lig-prep/${system}.lig.python.mol2
 limit_max_ligands                                            no
 skip_molecule                                                no
 read_mol_solvation                                           no
 calculate_rmsd                                               yes
 use_rmsd_reference_mol                                       yes
-rmsd_reference_filename                                      ${rootdir}/${system}/001.lig-prep/${system}.lig.am1bcc.mol2
+rmsd_reference_filename                                      ${rootdir}/${system}/001.lig-prep/${system}.lig.python.mol2
 use_database_filter                                          no
 orient_ligand                                                no
 bump_filter                                                  no
@@ -143,14 +143,14 @@ EOF
 
 ### Execute dock on the headnode
 ${dockdir}/dock6 -i ${system}.${vendor}.reference_minimization.in -o ${system}.${vendor}.reference_minimization.out
-mv output_scored.mol2 ${system}.lig.am1bcc.min.mol2
+mv output_scored.mol2 ${system}.lig.python.min.mol2
 
 ### Write footprints for multigrids later
 ###########################################################################################
 cat <<EOF >${system}.footprint_rescore.in
 conformer_search_type                                        rigid
 use_internal_energy                                          no
-ligand_atom_file                                             ${system}.lig.am1bcc.min.mol2
+ligand_atom_file                                             ${system}.lig.python.min.mol2
 limit_max_ligands                                            no
 skip_molecule                                                no
 read_mol_solvation                                           no
@@ -172,7 +172,7 @@ continuous_score_secondary                                   no
 footprint_similarity_score_primary                           yes
 footprint_similarity_score_secondary                         no
 fps_score_use_footprint_reference_mol2                       yes
-fps_score_footprint_reference_mol2_filename                  ${system}.lig.am1bcc.min.mol2
+fps_score_footprint_reference_mol2_filename                  ${system}.lig.python.min.mol2
 fps_score_foot_compare_type                                  Euclidean
 fps_score_normalize_foot                                     no
 fps_score_foot_comp_all_residue                              no

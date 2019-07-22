@@ -101,7 +101,7 @@ descriptor_use_tanimoto                                      no
 descriptor_use_hungarian                                     no
 descriptor_use_volume_overlap                                no
 descriptor_fms_score_use_ref_mol2                            yes
-descriptor_fms_score_ref_mol2_filename                       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2
+descriptor_fms_score_ref_mol2_filename                       ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2
 descriptor_fms_score_write_reference_pharmacophore_mol2      no
 descriptor_fms_score_write_reference_pharmacophore_txt       no
 descriptor_fms_score_write_candidate_pharmacophore           no

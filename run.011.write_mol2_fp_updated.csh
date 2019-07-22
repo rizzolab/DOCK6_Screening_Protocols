@@ -50,7 +50,7 @@ if (! -e ${rootdir}/${system}/011.final-results/system-files/) then
 	mkdir -p ${rootdir}/${system}/011.final-results/system-files/
 	cd ${rootdir}/${system}/011.final-results/system-files/
 	cp ${rootdir}/${system}/001.lig-prep/${system}.lig.am1bcc.mol2 ./
-	cp ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.am1bcc.min.mol2 ./
+	cp ${rootdir}/${system}/007.cartesian-min/${vendor}/${system}.lig.python.min.mol2 ./
 	cp ${rootdir}/${system}/002.rec-prep/${system}.rec.clean.mol2 ./
 	cp ${rootdir}/${system}/002.rec-prep/${system}.rec.clean.pdb ./
 	cp ${rootdir}/${system}/002.rec-prep/pro.noH.pdb ./${system}.rec.noH.pdb
