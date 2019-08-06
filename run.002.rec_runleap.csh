@@ -124,7 +124,7 @@ quit
 EOF
 ##################################################
 
-tleap -s -f pro.leap.in >& ${system}.pro.000.leap.log
+${amberdir}/tleap -s -f pro.leap.in >& ${system}.pro.000.leap.log
 ${amberdir}/ambpdb -p ${system}.pro.parm -tit "pdb.000" -c pro.crd > pro.000.pdb
 echo -n "atoms in pro.000.pdb (protonated) = "
 grep -c ATOM pro.000.pdb
@@ -244,7 +244,7 @@ echo "quit" >> com.leap.in
 ### Use leap to generate complex
 echo "------------ LEAP RUN_002 SUMMARY -------------"
 echo "Purpose: Generate complex with ssbonds"
-tleap -s -f com.leap.in >& ${system}.com.leap.log
+${amberdir}/tleap -s -f com.leap.in >& ${system}.com.leap.log
 ${amberdir}/ambpdb -p ${system}.lig.parm -tit "lig" -c ${system}.lig.ori.crd > ${system}.lig.ori.pdb
 ${amberdir}/ambpdb -p ${system}.pro.parm -tit "pro" -c ${system}.pro.ori.crd > ${system}.pro.ori.pdb
 ${amberdir}/ambpdb -p ${system}.rec.parm -tit "rec" -c ${system}.rec.ori.crd > ${system}.rec.ori.pdb
