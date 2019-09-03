@@ -1,2 +1,110 @@
-This is the repository for the Rizzo lab virtual screening protocol for DOCK6.9.
-Stay tuned for more instructions of its uses. 
+This is the collection of scripts and parameters that make up the Virtual Screening Protocol for the Rizzo Lab at Stony Brook University.
+
+NOTE BEFORE PROCEEDING: 
+These scripts have been tested in-house, but are often not the complete picture for each system's experiment or needs. Modification from this framework may often be necessary for a given system. Use at own risk.
+
+If any bugs are encountered, please contact the Rizzo Lab.
+
+
+Programs required to run these scripts:
+    DOCK6 and accessories
+    AMBER (for tleap, antechamber, sander)
+    AMBERTools
+    MOE
+
+Not every step requires every piece of software.
+
+Directories
+    zzz.master
+        - Where all of the files prepared before beginning should go.
+    zzz.parameters
+        - Collection of parameters that are used by the main scripts.
+    zzz.rank_scripts
+        - Collection of scripts used to rank outputs by various scores. Called in run.008.
+    zzz.scripts
+        - Collection of ancillary scripts called at various stages.
+
+
+The Main Scripts:
+run.000.set_env_vars.csh
+    - Sets the environment variables to be used in the rest of the scripts.
+    - Must be edited to match your own environment.
+    - Must be sourced before other scripts will function.
+
+run.001.lig_clean_am1bcc.csh
+    - Takes the prepared cognate ligand and performs the following:
+        - Pre-processes for use with DOCK.
+        - Charges it with AM1-BCC charges using Antechamber, from the Amber directory.
+        - Also does the same with any prepared cofactor.
+
+run.002.rec_runleap.csh
+    - Prepares the receptor for generating a grid and for use in MD.
+    - Removes any hydrogens present and reprotonates and charges with tleap (Ambertools)
+    - Checks for any long bonds, disulfide bonds, and HIE/HID residue naming.
+    - Generates and minimizes a complex with the receptor, ligand, and cofactors.
+    - Separates the minimized ligand from the complex.
+
+run.003.rec_dms_sph.csh
+    - Runs dms on the receptor to generate a DMS surface to generate spheres.
+    - Runs sphgen on the dms surface outfile to generate spheres for use in docking.
+
+run.004.rec_grid_cluster.csh
+    - Generates a box and runs grid to generate an energy grid that will be used in docking.\
+
+run.005.vendor_make_subsets
+    - Breaks a library of molecules into smaller chunks suitable for virtual screening on a cluster.
+    - Also does some pruning for min/max rotable bonds and absolute net charge (user defined).
+
+run.006a.dock_to_grid.csh
+    - Writes docking files for each chunk.
+    - Writes a submission script for SLURM.
+    - Submits the SLURM script w/ user specified timing and node information.
+
+run.006b.dock_leftovers.csh
+    - Determines which molecules did not dock (wall clock limit, job died unexpectedly, etc).
+    - Concatenates these molecules to a file and submits a new docking job for them.
+
+run.007a.cartesian_min.csh
+    - Takes the output from docking to a grid and docks and rescores each molecule in Cartesian space.
+
+run.007b.make-mg.sh
+    - Takes the primary residues found in 007a and generates a multigrid based on that output.
+
+run.008.submit_rankjobs.csh
+    - Submits jobs to a cluster to rank the final output by each score.
+
+run.009.descriptor_rescore.ranked.csh
+    - Rescores each ligand based on a footprint reference.
+    
+run.010.moe_postprocess.csh
+    - Postprocessing script for virtual screening. 
+    - Calculates descriptors and clusters molecules by footprint.
+
+run.011.write_mol2_fp_updated.csh
+    - Writes output ranked files of clusterheads ranked by scoring function, which should be visually inspected for compound selection.
+    - Generates footprint plots for each molecule.
+
+
+That concludes the traditional virtual screening protocol. The rest of the scripts deal with an expanded de novo protocol for building brand new molecules in a fragment-based fashion. 
+
+
+run.012a.dn.submit_denovo.csh
+    - Generates input files for de novo docking and submits them to a cluster
+    - Requires specifying the anchor directory, which is a user defined collection of anchors to use as a base in de novo design.
+    
+run.012b.dn.prune_prepare_cartmin.csh
+    - Extracts a top scoring copy of each molecule from multiomol2 output of the previous step.
+    - Submits a cartesian minimization to the cluster.
+
+run.013.dn.submit_rankjobs.csh
+    - Same function as run.008, for de novo molecules.
+
+run.014.dn.descriptor_rescore.ranked.csh
+    - Same function as run.009, for de novo molecules.
+
+run.015.dn.moe_postprocess.csh
+    - Same function as run.010, for de novo molecules.
+
+run.016.dn.ping_databases.csh
+    - Similar function to run.011, for de novo molecules.
+    - Will also ping ZINC and PubChem for a similarity search (hardcoded cutoff being 0.75) for the molecules to see if there are analogues available.
