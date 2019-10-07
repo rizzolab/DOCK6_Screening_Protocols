@@ -5,34 +5,35 @@
 # Edit the lines below to match your desired environment variables. Source this script prior to
 # running the others.
 #
-# Remeber to define VS_ROOTDIR and VS_SYSTEM
+# Remember to define each variable to meet your cluster/system
 
 ### For running the scripts on Cluster
 if (`hostname -f` == "login1.cm.cluster" || `hostname -f` == "login2.cm.cluster" || `hostname -f ` == "rizzo.cm.cluster") then
 
+### Source some global variables
+
 	### DOCK home directory
-        setenv DOCKHOMEWORK /gpfs/projects/rizzo/zzz.programs/dock6.9_mpiv2018.0.3
+    setenv DOCKHOMEWORK /gpfs/projects/rizzo/zzz.programs/dock6.9_mpiv2018.0.3
 
 	### AMBER home directory
-        setenv AMBERHOMEWORK /gpfs/software/amber/16_gpu/amber16/
+    setenv AMBERHOMEWORK /gpfs/software/amber/16_gpu/amber16/
 
 	### MOE home directory
 	setenv MOEHOMEWORK /gpfs/projects/rizzo/zzz.programs/moe_2016.0801/
 
-        ## DMS home directory
-        setenv DMSHOMEWORK /gpfs/projects/rizzo/zzz.programs/dms
+    ## DMS home directory
+    setenv DMSHOMEWORK /gpfs/projects/rizzo/zzz.programs/dms
 
 	### Root directory (the directory where all run.xxx.csh scripts are located)
 	setenv VS_ROOTDIR  /gpfs/projects/rizzo/leprentis/DJ1/VS_2or3
 
-        ### MPI directory (this is where mpirun is located, compatible with dock6.mpi)
-        #setenv VS_MPIDIR /gpfs/software/intel/parallel-studio-xe/2019/compilers_and_libraries/linux/mpi/intel64
-        setenv VS_MPIDIR /gpfs/software/intel/parallel-studio-xe/2018_3/compilers_and_libraries/linux/mpi/intel64
+    ### MPI directory (this is where mpirun is located, compatible with dock6.mpi)
+    setenv VS_MPIDIR /gpfs/software/intel/parallel-studio-xe/2018_3/compilers_and_libraries/linux/mpi/intel64
 
 	### System name
-	setenv VS_SYSTEM 2or3 #example - gp41.outerpocket
+	setenv VS_SYSTEM PDB #example - gp41.outerpocket located in zzz.master
 
-	### Vendor name
+	### Vendor name - library file directory name
 	setenv VS_VENDOR zinc15 #example - cdiv, chbr nt1105 sp100309
 	
 	### Fragment Library (only needed for DN and GA)
@@ -41,11 +42,12 @@ if (`hostname -f` == "login1.cm.cluster" || `hostname -f` == "login2.cm.cluster"
 	### Anchor Library (only needed for DN)
 	setenv ANCLIB /gpfs/projects/rizzo/leprentis/zinc1_ancs_freq
 
-        ### Max number of molecules to pass to Moe
-        setenv MAX_NUM_MOL 100000 #standard is 100K 
+    ### Max number of molecules to pass to Moe
+    setenv MAX_NUM_MOL 100000 #standard is 100K 
 
-        echo " Running the VS protocol on the SeaWulf Cluster"
-        exit
+    echo " Running the VS protocol on the SeaWulf Cluster"
+    exit
+
 endif
 
 if (`hostname -f` == "lired.cm.cluster") then
@@ -71,7 +73,7 @@ if (`hostname -f` == "lired.cm.cluster") then
         ### System name
         setenv VS_SYSTEM zika.postfusion.trimer.stem
         ### Vendor name
-	setenv VS_VENDOR zinc15 #example - cdiv, chbr
+	    setenv VS_VENDOR zinc15 #example - cdiv, chbr
 
         echo " Running the VS protocol on the LIRED Cluster"
           
