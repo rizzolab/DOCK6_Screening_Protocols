@@ -20,7 +20,8 @@ Directories
     zzz.parameters
         - Collection of parameters that are used by the main scripts.
     zzz.rank_scripts
-        - Collection of scripts used to rank outputs by various scores. Called in run.008.
+        - Collection of scripts used to rank outputs by various scores. Referred to as
+          run.008 etc. Denovo and virtual screening scripts denoted separately.
     zzz.scripts
         - Collection of ancillary scripts called at various stages.
 
