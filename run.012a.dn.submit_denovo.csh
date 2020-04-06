@@ -91,7 +91,7 @@ dn_constraint_rot_bon                                        15
 dn_constraint_formal_charge                                  ${dn_fc}
 dn_heur_unmatched_num                                        ${dn_heur_unmatched_num}
 dn_heur_matched_rmsd                                         ${dn_heur_matched_rmsd}
-dn_unique_anchors                                            3
+dn_unique_anchors                                            1
 dn_max_grow_layers                                           ${dn_max_grow_layers}
 dn_max_root_size                                             ${dn_max_root_size}
 dn_max_layer_size                                            ${dn_max_layer_size}
