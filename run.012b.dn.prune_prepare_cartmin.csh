@@ -204,13 +204,13 @@ while ($a <= ${max_anchors})
         echo ${denovo_name}
 
 ### De novo molecules must be given a unique identifier
-        python ${scriptdir}/replace_denovo_names.py ${system}.final.denovo_build.mol2 ${system}.renamed.denovo_build.mol2 ${denovo_name}
+        #python ${scriptdir}/replace_denovo_names.py ${system}.final.denovo_build.mol2 ${system}.renamed.denovo_build.mol2 ${denovo_name}
 
 ### The residues must be renumbered in column 7 for it to be compatible with Moe
-        python ${scriptdir}/renumber_residues_in_mol2_for_moe.py ${system}.renamed.denovo_build.mol2 ${system}.renamed.renumbered.denovo_build.mol2
+        python ${scriptdir}/renumber_residues_in_mol2_for_moe.py ${system}.final.denovo_build.mol2 ${system}.final.renumbered.denovo_build.mol2
 
 ### Concatenate all anchor denovo files together to begin minimizing, rescoring, and clustering.
-        cat ${system}.renamed.renumbered.denovo_build.mol2 >> ../anchors_all/combined_denovo_anchors.mol2
+        cat ${system}.final.renumbered.denovo_build.mol2 >> ../anchors_all/combined_denovo_anchors.mol2
 echo "Concatenating all of the anchors together..."
 
         @ a++
