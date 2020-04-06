@@ -76,6 +76,7 @@ dn_user_specified_anchor                                     yes
 dn_fraglib_anchor_file                                       ${ancdir}/anchor_${a}.mol2 
 dn_use_torenv_table                                          yes
 dn_torenv_table                                              ${fragdir}/fraglib_torenv.dat
+dn_name_identifier                                           denovo_anchor${a}_
 dn_sampling_method                                           graph
 dn_graph_max_picks                                           30
 dn_graph_breadth                                             3
