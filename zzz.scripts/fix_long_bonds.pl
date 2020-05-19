@@ -77,7 +77,8 @@ close (LEAPOUT);
 #fix histidines protonated incorrectly
 for ($j=0; $j<$natm; $j++)
 {
-	next if (!($atoname[$j] eq "CAL") and !($atoname[$j] eq "MAG") and !($atoname[$j] eq "ZIN"));
+	next if (!($resname[$j] eq "CAL") and !($resname[$j] eq "MAG") and !($resname[$j] eq "ZIN") and !($resname[$j] eq "ZN") and 
+ !($resname[$j] eq "MG") and !($resname[$j] eq "CA"));
 	for ($i=0; $i<$natm; $i++)
 	{
 		next if !($resname[$i] eq "HIE");	# Process only HIE
