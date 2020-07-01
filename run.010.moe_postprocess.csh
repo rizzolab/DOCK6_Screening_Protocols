@@ -28,7 +28,7 @@ set system    = "${VS_SYSTEM}"
 set vendor    = "${VS_VENDOR}"
 
 
-set wcl   = 12:00:00
+set wcl   = 24:00:00
 set nodes = 1
 set ppn   = 24
 set queue = "long-24core"
