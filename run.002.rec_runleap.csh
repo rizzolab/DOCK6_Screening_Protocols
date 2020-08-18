@@ -262,15 +262,15 @@ grep -c ATOM ${system}.com.ori.pdb
 ### Run sander to minimize hydrogen positions
 echo "Creating ori.mol2 files before minimization"
 
-${amberdir}/ambpdb -p ${system}.lig.parm -c ${system}.lig.ori.crd -mol2 > ${system}.lig.ori.0.mol2 
-${amberdir}/ambpdb -p ${system}.pro.parm -c ${system}.pro.ori.crd -mol2 > ${system}.pro.ori.0.mol2 
-${amberdir}/ambpdb -p ${system}.rec.parm -c ${system}.rec.ori.crd -mol2 > ${system}.rec.ori.0.mol2 
-${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.ori.crd -mol2 > ${system}.com.ori.0.mol2
+${amberdir}/ambpdb -p ${system}.lig.parm -c ${system}.lig.ori.crd -mol2 -sybyl > ${system}.lig.ori.mol2 
+${amberdir}/ambpdb -p ${system}.pro.parm -c ${system}.pro.ori.crd -mol2 -sybyl > ${system}.pro.ori.mol2 
+${amberdir}/ambpdb -p ${system}.rec.parm -c ${system}.rec.ori.crd -mol2 -sybyl > ${system}.rec.ori.mol2 
+${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.ori.crd -mol2 -sybyl > ${system}.com.ori.mol2
 
-${amberdir}/antechamber -i ${system}.lig.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.lig.ori.mol2 -fo mol2 -dr n
-${amberdir}/antechamber -i ${system}.pro.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.pro.ori.mol2 -fo mol2 -dr n
-${amberdir}/antechamber -i ${system}.rec.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.rec.ori.mol2 -fo mol2 -dr n
-${amberdir}/antechamber -i ${system}.com.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.com.ori.mol2 -fo mol2 -dr n
+#${amberdir}/antechamber -i ${system}.lig.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.lig.ori.mol2 -fo mol2 -dr n
+#${amberdir}/antechamber -i ${system}.pro.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.pro.ori.mol2 -fo mol2 -dr n
+#${amberdir}/antechamber -i ${system}.rec.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.rec.ori.mol2 -fo mol2 -dr n
+#${amberdir}/antechamber -i ${system}.com.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.com.ori.mol2 -fo mol2 -dr n
  
 if ( -e ${masterdir}/${system}.cof.moe.mol2 ) then
 	${amberdir}/ambpdb -p ${system}.cof.parm -c ${system}.cof.ori.crd -mol2 -sybyl ${system}.cof.ori.mol2 
@@ -328,8 +328,8 @@ EOF1
 
 echo "Minimizing unrestrained gas-phase ligand alone with sander"
 ${amberdir}/sander -O -i sander.lig.in -o sander.lig.out -p ${system}.lig.parm -c ${system}.lig.ori.crd -r ${system}.lig.only.min.rst
-${amberdir}/ambpdb -p ${system}.lig.parm -c ${system}.lig.only.min.rst -mol2 > ${system}.lig.only.min.0.mol2
-${amberdir}/antechamber -i ${system}.lig.only.min.0.mol2 -fi mol2 -at sybyl -o ${system}.lig.only.min.mol2 -fo mol2 -dr n 
+${amberdir}/ambpdb -p ${system}.lig.parm -c ${system}.lig.only.min.rst -mol2 -sybyl > ${system}.lig.only.min.mol2
+#${amberdir}/antechamber -i ${system}.lig.only.min.0.mol2 -fi mol2 -at sybyl -o ${system}.lig.only.min.mol2 -fo mol2 -dr n 
 #${amberdir}/top2mol2 -p ${system}.lig.parm -c ${system}.lig.only.min.rst -o ${system}.lig.only.min.mol2 -at sybyl -bt sybyl
 grep "SANDER BOMB" sander.lig.out
 grep -A1 NSTEP sander.lig.out | tail -2
@@ -365,8 +365,8 @@ grep STRIP rec.ptraj.out
 echo "Writing receptor mol2"
 
 #Yuzhang modification made for multiple ligands aka waters etc.
-${amberdir}/ambpdb -p ${system}.rec.parm -c ${system}.rec.min.rst -mol2 > ${system}.rec.min.0.mol2
-${amberdir}/antechamber -i ${system}.rec.min.0.mol2 -fi mol2 -at sybyl -o ${system}.rec.min.mol2 -fo mol2 -dr n 
+${amberdir}/ambpdb -p ${system}.rec.parm -c ${system}.rec.min.rst -mol2 -sybyl > ${system}.rec.min.mol2
+#${amberdir}/antechamber -i ${system}.rec.min.0.mol2 -fi mol2 -at sybyl -o ${system}.rec.min.mol2 -fo mol2 -dr n 
 
 #${amberdir}/top2mol2 -p ${system}.rec.parm -c ${system}.rec.min.rst -o ${system}.rec.min.mol2 -at sybyl -bt sybyl
 echo "Creating ligand mol2 file"
@@ -376,9 +376,9 @@ echo "trajout ${system}.lig.min.rst restart"  >> lig.ptraj.in
 ${amberdir}/cpptraj ${system}.com.parm lig.ptraj.in >& lig.ptraj.out
 grep STRIP lig.ptraj.out
 ${amberdir}/ambpdb -p ${system}.lig.parm -c ${system}.lig.min.rst -mol2 > ${system}.lig.min.0.mol2 
-${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.min.rst -mol2 > ${system}.com.min.0.mol2
+${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.min.rst -mol2 -sybyl > ${system}.com.min.mol2
 ${amberdir}/antechamber -i ${system}.lig.min.0.mol2 -fi mol2 -at sybyl -o ${system}.lig.min.mol2 -fo mol2 -dr n
-${amberdir}/antechamber -i ${system}.com.min.0.mol2 -fi mol2 -at sybyl -o ${system}.com.min.mol2 -fo mol2 -dr n 
+#${amberdir}/antechamber -i ${system}.com.min.0.mol2 -fi mol2 -at sybyl -o ${system}.com.min.mol2 -fo mol2 -dr n 
 #${amberdir}/top2mol2 -p ${system}.lig.parm -c ${system}.lig.min.rst -o ${system}.lig.min.mol2 -at sybyl -bt sybyl 
 #${amberdir}/top2mol2 -p ${system}.com.parm -c ${system}.com.min.rst -o ${system}.com.min.mol2 -at sybyl -bt sybyl
 
