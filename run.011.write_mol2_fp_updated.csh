@@ -58,14 +58,14 @@ if (! -e ${rootdir}/${system}/011.final-results/system-files/) then
 	cp ${rootdir}/${system}/004.grid/box.pdb ./${system}.box.pdb
 endif
 
-foreach dockscore (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_score descriptor_score)
+foreach primary_score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_score descriptor_score)
 
-  echo ${dockscore}
+  echo ${primary_score}
 #qsub here
 
-rm -rf ${rootdir}/${system}/011.final-results/${vendor}/${dockscore}_rank
-mkdir -p ${rootdir}/${system}/011.final-results/${vendor}/${dockscore}_rank
-cd ${rootdir}/${system}/011.final-results/${vendor}/${dockscore}_rank
+rm -rf ${rootdir}/${system}/011.final-results/${vendor}/${primary_score}_rank
+mkdir -p ${rootdir}/${system}/011.final-results/${vendor}/${primary_score}_rank
+cd ${rootdir}/${system}/011.final-results/${vendor}/${primary_score}_rank
 
 
 
@@ -73,16 +73,16 @@ cd ${rootdir}/${system}/011.final-results/${vendor}/${dockscore}_rank
 
 ### Write out mol2 files for each different sorting method and for each group - families and 
 ### clusterheads. Each resulting mol2 file will contain $max_size molecules.
-if( -e ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.sorted_${dockscore}_${max_num}_dock.mol2 ) then
+if( -e ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.sorted_${primary_score}_${max_num}_dock.mol2 ) then
    echo " Writing the families and clusterhead mol2 files for each scoring metric\n"
    mkdir temp/
    cd temp/
-   cp ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.sorted_${dockscore}_${max_num}_dock.mol2 ./
-   python ${scriptdir}/break_into_mol.py ${system}.${vendor}.${dockscore}_rank.sorted_${dockscore}_${max_num}_dock.mol2
-   perl ${scriptdir}/concatenate_mol2_new_headers_descriptor.pl ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.final_sorted_dce_sum_families.csv
+   cp ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.sorted_${primary_score}_${max_num}_dock.mol2 ./
+   python ${scriptdir}/break_into_mol.py ${system}.${vendor}.${primary_score}_rank.sorted_${primary_score}_${max_num}_dock.mol2
+   perl ${scriptdir}/concatenate_mol2_new_headers_descriptor.pl ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.final_sorted_dce_sum_families.csv
   cd ../
 else
-  echo " The file  ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.sorted_${dockscore}_${max_num}_dock.mol2 does not exist"
+  echo " The file  ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.sorted_${primary_score}_${max_num}_dock.mol2 does not exist"
   exit
 endif
 
@@ -91,7 +91,7 @@ set head_size = ${max_size}
 foreach score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_score descriptor_score)
 	foreach group (clusterheads families)
 
-		head -n ${head_size} ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.final_sorted_${score}_${group}.csv | awk -F "," '{print $1}' | sed '1d' > ${score}_${group}_zinc_codes.txt
+		head -n ${head_size} ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.final_sorted_${score}_${group}.csv | awk -F "," '{print $1}' | sed '1d' > ${score}_${group}_zinc_codes.txt
                 set listrank=1 #reset rank to 1 for a new clusterhead+scoring metric
 
                 if(${group} == "clusterheads" )then
@@ -99,16 +99,18 @@ foreach score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_
 			rm -f temp/temp.mol2
 			cp temp/${mol2}_new.mol2 temp/temp.mol2
 			echo "##########                            List_Rank:      ${listrank}" | cat - temp/temp.mol2 > temp/temp2.mol2
-			echo "##########                            From_List:      ${score}" | cat - temp/temp2.mol2 > temp/temp3.mol2
-			cat temp/temp3.mol2 >> ${system}.${vendor}.${dockscore}_rank.final_sorted_${score}_${group}_${max_size}.mol2
+			echo "##########                    From_Primary_List:      ${primary_score}" | cat - temp/temp2.mol2 > temp/temp3.mol2
+            echo "##########                  From_Secondary_List:      ${score}" | cat - temp/temp2.mol2 > temp/temp3.mol2
+			cat temp/temp3.mol2 >> ${system}.${vendor}.${primary_score}_rank.final_sorted_${score}_${group}_${max_size}.mol2
                         @ listrank++ # increase rank
 		   end
                 else
                    foreach mol2 (` cat ${score}_${group}_zinc_codes.txt `)
                         rm -f temp/temp.mol2
                         cp temp/${mol2}_new.mol2 temp/temp.mol2
-			echo "##########                            From_List:      ${score}" | cat - temp/temp.mol2 > temp/temp2.mol2
-                        cat temp/temp2.mol2 >> ${system}.${vendor}.${dockscore}_rank.final_sorted_${score}_${group}_${max_size}.mol2
+			echo "##########                   From_Primary_List:      ${primary_score}" | cat - temp/temp.mol2 > temp/temp2.mol2
+            echo "##########                 From_Secondary_List:      ${score}" | cat - temp/temp.mol2 > temp/temp2.mol2
+                        cat temp/temp2.mol2 >> ${system}.${vendor}.${primary_score}_rank.final_sorted_${score}_${group}_${max_size}.mol2
                    end 
                 endif  
 		cat ${score}_${group}_zinc_codes.txt >> used_zinc_codes.txt
@@ -124,13 +126,13 @@ echo "Writing footprint txt files for each scoring+group combo\n"
 
 mkdir temp/
 cd temp/
-python ${scriptdir}/break_into_fp.py ${rootdir}/${system}/010.moe-postprocess/${vendor}/${dockscore}_rank/${system}.${vendor}.${dockscore}_rank.total_fp.txt
+python ${scriptdir}/break_into_fp.py ${rootdir}/${system}/010.moe-postprocess/${vendor}/${primary_score}_rank/${system}.${vendor}.${primary_score}_rank.total_fp.txt
 cd ../
 
 foreach score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_score descriptor_score)
         foreach group (clusterheads families)
                 foreach zincid (`cat ${score}_${group}_zinc_codes.txt `)
-			cat temp/${zincid}.txt >> ${system}.${vendor}.${dockscore}_rank.footprints_${score}_${group}_${max_size}.txt
+			cat temp/${zincid}.txt >> ${system}.${vendor}.${primary_score}_rank.footprints_${score}_${group}_${max_size}.txt
                 end
         end
 end
@@ -146,7 +148,7 @@ cd temp/
 foreach score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_score descriptor_score)
 	foreach group (clusterheads families)
 
-		python ${scriptdir}/break_into_fp.py ../${system}.${vendor}.${dockscore}_rank.footprints_${score}_${group}_${max_size}.txt
+		python ${scriptdir}/break_into_fp.py ../${system}.${vendor}.${primary_score}_rank.footprints_${score}_${group}_${max_size}.txt
 	end
 end
 
@@ -164,7 +166,7 @@ foreach score (dce_sum fps_es fps_sum fps_vdw totalScore fms_score vo_score hms_
 			set filenames = "${filenames} temp/${zincid}.pdf"
 		end
 
-		gs -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=${system}.${vendor}.${dockscore}_rank.footprint_plots_${score}_${group}_${max_size}.pdf ${filenames}
+		gs -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=${system}.${vendor}.${primary_score}_rank.footprint_plots_${score}_${group}_${max_size}.pdf ${filenames}
 	end
 end
 
