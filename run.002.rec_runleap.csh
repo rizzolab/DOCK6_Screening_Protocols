@@ -70,10 +70,13 @@ set num_TER = `grep -c "TER" ${system}.rec.foramber.pdb`
 echo "${system}.rec.foramber.pdb has ${num_CA} alpha carbons and ${num_TER} TERS" | tee ${system}.report.txt
 
 
+
+
 ### Deal with non-standard residues
 ${scriptdir}/fix_nonstandard_res.pl ${system}.rec.foramber.pdb ../001.lig-prep/${system}.lig.am1bcc.mol2 out.pdb | tee ${system}.report.txt
 mv ${system}.rec.foramber.pdb ${system}.rec.foramber.pdb.old
 mv out.pdb ${system}.rec.foramber.pdb
+
 
 
 ### Copy some parameter files over that leap will need
@@ -398,7 +401,6 @@ python ${scriptdir}/clean_mol2.py ${system}.lig.min.mol2 ${system}.lig.python.mo
 ${amberdir}/ambpdb -p ${system}.rec.parm -c ${system}.rec.min.rst > ${system}.rec.clean.pdb
 
 
-
 ### Run check grid
 ##################################################
 cat <<EOF >grid.in
@@ -423,6 +425,12 @@ rm -f ions.frcmod ions.lib parm.e16.dat gaff*frcmod y2p.* heme.*
 #rm -f ${system}.rec.min.mol2 ${system}.rec.nomin.mol2 ${system}.rec.foramber.pdb 
 #rm -f ${system}.com.* ${system}.lig.* ${system}.rec.leap* ${system}.rec.gas*
 rm -f mdinfo grid.in sander.* ssbonds.txt
+### Deal with ions and make them suitable for amber
+awk '{gsub("ZN","Zn",$6)}1' ${system}.rec.clean.mol2 > tmp1.rec.pdb
+awk '{gsub("MG","Mg",$6)}1' tmp1.rec.pdb> tmp2.rec.pdb
+awk '{gsub("CA", "Ca",$6)}1' tmp2.rec.pdb>  ${system}.rec.clean.mol2
 
+
+rm tmp1.rec.pdb tmp2.rec.pdb
 
 exit
