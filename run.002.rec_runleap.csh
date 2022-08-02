@@ -286,14 +286,13 @@ if ( -e ${masterdir}/${system}.cof.moe.mol2 ) then
 	${amberdir}/ambpdb -p ${system}.cof.parm -c ${system}.cof.ori.crd -mol2 -sybyl > ${system}.cof.ori.mol2 
 
 ###Check for problems caused by ambpdb
-#CHECK TO SEE IF ANY ATOM TYPES HAVE CHANGED FROM AMBPDB
 set FATAL = 0
 foreach p ($patterns)
   foreach a ($atm_types)
-    set c1 = `grep -c "${a}\." ../001.lig-prep/${system}.${p}.am1bcc.mol2`
+    set c1 = `grep -c "${a}\." ${rootdir}/${system}/001.lig-prep/${system}.${p}.am1bcc.mol2`
     #grep  "${a}\." ../001.lig-prep/${system}.${p}.am1bcc.mol2
     echo "$c1 $a atoms prior ambpdb"
-    set c2 = `grep -c "${a}\." ${system}.${p}.ori.mol2`
+    set c2 = `grep -c "${a}\." ${rootdir}/${system}/002.rec-prep/${system}.${p}.ori.mol2`
     #grep \"${a}\.\" ${system}.${p}.ori.mol2
     echo "$c2 $a atoms post ambpdb"
     if !( $c2 == $c1 ) then
