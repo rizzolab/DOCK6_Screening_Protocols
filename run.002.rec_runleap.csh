@@ -21,6 +21,13 @@ set zincdir   = "${rootdir}/zzz.zinclibs"
 set system    = "${VS_SYSTEM}"
 set vendor    = "${VS_VENDOR}"
 
+##define some variables related to error checking
+set patterns=(lig cof)
+set atm_types=(N O C P H S)
+set RED='\033[0;31m'
+set NC='\033[0m'
+
+
 ### Check to see if the ligand file exists
 if ( ! -e ${rootdir}/${system}/001.lig-prep/${system}.lig.am1bcc.mol2 ) then
 	echo "You have to prepare the ligand first. Exiting."
@@ -276,7 +283,31 @@ ${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.ori.crd -mol2 -sybyl >
 #${amberdir}/antechamber -i ${system}.com.ori.0.mol2 -fi mol2 -at sybyl -o ${system}.com.ori.mol2 -fo mol2 -dr n
  
 if ( -e ${masterdir}/${system}.cof.moe.mol2 ) then
-	${amberdir}/ambpdb -p ${system}.cof.parm -c ${system}.cof.ori.crd -mol2 -sybyl ${system}.cof.ori.mol2 
+	${amberdir}/ambpdb -p ${system}.cof.parm -c ${system}.cof.ori.crd -mol2 -sybyl > ${system}.cof.ori.mol2 
+
+###Check for problems caused by ambpdb
+#CHECK TO SEE IF ANY ATOM TYPES HAVE CHANGED FROM AMBPDB
+set FATAL = 0
+foreach p ($patterns)
+  foreach a ($atm_types)
+    set c1 = `grep -c "${a}\." ../001.lig-prep/${system}.${p}.am1bcc.mol2`
+    #grep  "${a}\." ../001.lig-prep/${system}.${p}.am1bcc.mol2
+    echo "$c1 $a atoms prior ambpdb"
+    set c2 = `grep -c "${a}\." ${system}.${p}.ori.mol2`
+    #grep \"${a}\.\" ${system}.${p}.ori.mol2
+    echo "$c2 $a atoms post ambpdb"
+    if !( $c2 == $c1 ) then
+      echo "${RED} FATAL ERROR $a ATOM TYPE COUNTS NOT MATCHING BEFORE AND AFTER AMBPDB in $p ${NC}"
+      set FATAL = 1
+    endif
+  end
+end
+
+if ($FATAL) then
+  echo "${RED} FATAL ERRORS with AMBPDB DETECTED! EXITING! ${NC}"
+  exit
+endif
+
 
 # top2mol2 has been deprecated since Amber15 but can be rebuilt in the antechamber makefile if uncommented
 #${amberdir}/top2mol2 -p ${system}.lig.parm -c ${system}.lig.ori.crd -o ${system}.lig.ori.mol2 -at sybyl -bt sybyl 
