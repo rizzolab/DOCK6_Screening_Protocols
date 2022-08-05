@@ -23,7 +23,7 @@ set vendor    = "${VS_VENDOR}"
 
 ##define some variables related to error checking
 set patterns=(lig cof)
-set atm_types=(N O C P H S)
+set atm_types=(N O C P S)
 set RED='\033[0;31m'
 set NC='\033[0m'
 
