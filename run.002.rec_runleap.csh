@@ -285,22 +285,23 @@ ${amberdir}/ambpdb -p ${system}.com.parm -c ${system}.com.ori.crd -mol2 -sybyl >
 if ( -e ${masterdir}/${system}.cof.moe.mol2 ) then
 	${amberdir}/ambpdb -p ${system}.cof.parm -c ${system}.cof.ori.crd -mol2 -sybyl > ${system}.cof.ori.mol2 
 
-###Check for problems caused by ambpdb
+#CHECK TO SEE IF ANY ATOM TYPES HAVE CHANGED FROM AMBPDB
 set FATAL = 0
 foreach p ($patterns)
   foreach a ($atm_types)
     set c1 = `grep -c "${a}\." ${rootdir}/${system}/001.lig-prep/${system}.${p}.am1bcc.mol2`
     #grep  "${a}\." ../001.lig-prep/${system}.${p}.am1bcc.mol2
-    echo "$c1 $a atoms prior ambpdb"
+    echo "$c1 $p $a atoms prior ambpdb"
     set c2 = `grep -c "${a}\." ${rootdir}/${system}/002.rec-prep/${system}.${p}.ori.mol2`
     #grep \"${a}\.\" ${system}.${p}.ori.mol2
-    echo "$c2 $a atoms post ambpdb"
+    echo "$c2 $p $a atoms post ambpdb"
     if !( $c2 == $c1 ) then
-      echo "${RED} FATAL ERROR $a ATOM TYPE COUNTS NOT MATCHING BEFORE AND AFTER AMBPDB in $p ${NC}"
+      echo "${RED} FATAL ERROR $a ATOM TYPE COUNTS NOT MATCHING BEFORE AND AFTER AMBPDB in ${system}.${p}.am1bcc.mol2 , ${system}.${p}.ori.mol2  ${NC}"
       set FATAL = 1
     endif
   end
 end
+
 
 if ($FATAL) then
   echo "${RED} FATAL ERRORS with AMBPDB DETECTED! EXITING! ${NC}"
