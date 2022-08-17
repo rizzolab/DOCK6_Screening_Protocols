@@ -21,11 +21,12 @@ set zincdir   = "${rootdir}/zzz.zinclibs"
 set system    = "${VS_SYSTEM}"
 set vendor    = "${VS_VENDOR}"
 
-##define some variables related to error checking
+#some definitions for error screening
 set patterns=(lig cof)
-set atm_types=(N O C P S)
+set atm_types=(N O C P S Cl Br F)
 set RED='\033[0;31m'
 set NC='\033[0m'
+
 
 
 ### Check to see if the ligand file exists
@@ -301,7 +302,6 @@ foreach p ($patterns)
     endif
   end
 end
-
 
 if ($FATAL) then
   echo "${RED} FATAL ERRORS with AMBPDB DETECTED! EXITING! ${NC}"
