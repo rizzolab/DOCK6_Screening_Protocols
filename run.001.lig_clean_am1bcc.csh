@@ -78,7 +78,7 @@ rm -f temp1.mol2 temp2.mol2 lig_scored.mol2 dock.lig.in
 
 
 ### Compute ligand charges with antechamber
-${amberdir}/acdoctor -i ${system}.lig.processed.mol2 -f mol2
+${amberdir}/acdoctor -i ${system}.lig.processed.mol2 -f mol2 >& ac.lig.log
 
 if ( `grep "Fatal Error" ac.lig.log | wc -l` ) then
    echo "Fatal Error occurred in ligand preparation. Check ./${system}/001.lig-prep/ac.lig.log for more information."
