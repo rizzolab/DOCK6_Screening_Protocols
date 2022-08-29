@@ -95,7 +95,13 @@ mv sqm.in sqm.lig.in
 
 ### If it exists, also compute cofactor charges
 if ( -e ${masterdir}/${system}.cof.moe.mol2 ) then
-	${amberdir}/acdoctor -i ${system}.cof.processed.mol2 -f mol2
+	${amberdir}/acdoctor -i ${system}.cof.processed.mol2 -f mol2 >& ac.cof.log
+
+        if ( `grep "Fatal Error" ac.cof.log | wc -l` ) then
+           echo "Fatal Error occurred in cofactor preparation. Check ./${system}/001.lig-prep/ac.cof.log for more information."
+           exit
+        endif
+
 	${amberdir}/antechamber -fi mol2 -fo mol2 -c bcc -j 5 -at sybyl -s 2 -pf y -i ${system}.cof.processed.mol2 -o ${system}.cof.am1bcc.mol2
 	if ( `grep "No convergence in SCF" sqm.out | wc -l` ) then
 		${amberdir}/antechamber -fi mol2 -fo mol2 -c bcc -j 5 -at sybyl -s 2 -pf y -ek "itrmax=100000, qm_theory='AM1', grms_tol=0.0002, tight_p_conv=0, scfconv=1.d-8" -i $system.cof.processed.mol2 -o $system.cof.am1bcc.mol2
