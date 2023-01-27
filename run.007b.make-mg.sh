@@ -103,12 +103,12 @@ mv grid_output_scored.mol2 ${system}.lig.gridmin.mol2
 ###########################################################################################
 cat <<EOF >${system}.multigrid.in
 compute_grids                  yes
-grid_spacing                   0.4
+grid_spacing                   0.3
 output_molecule                yes
 contact_score                  no
 chemical_score                 no
 energy_score                   yes
-energy_cutoff_distance         9999
+energy_cutoff_distance         999
 atom_model                     a
 attractive_exponent            ${attractive}
 repulsive_exponent             ${repulsive}
